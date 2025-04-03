@@ -1,91 +1,108 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>期望值計算器</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-        }
         .container {
-            max-width: 400px;
-            margin: auto;
+            max-width: 600px;
+            margin: 20px auto;
             padding: 20px;
-            border: 2px solid #000;
-            border-radius: 10px;
-            box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 16px;
+            transition: background-color 0.2s;
+        }
+        .input-group {
+            margin: 10px 0;
+        }
+        label {
+            display: inline-block;
+            width: 250px;
+            margin-right: 10px;
+            text-align: right;
+        }
+        input {
+            width: 150px;
+            padding: 5px;
         }
         button {
-            width: 100%;
-            padding: 10px;
-            font-size: 18px;
-            background-color: blue;
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
         }
         button:hover {
-            background-color: darkblue;
+            background-color: #45a049;
         }
         #result {
+            text-align: center;
             font-size: 18px;
-            margin-top: 15px;
-            font-weight: bold;
-            color: red;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
         }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <h2>期望值計算器</h2>
-        <label>每次抽獎的成本（點數）:</label>
-        <input type="number" id="cost" placeholder="輸入每次抽獎成本">
-        
-        <label>道具的中獎機率（%）:</label>
-        <input type="number" id="probability" placeholder="輸入中獎機率（如 10 代表 10%）">
-        
+        <div class="input-group">
+            <label for="cost">每次抽獎的成本（例如 100 點）:</label>
+            <input type="text" id="cost" onkeypress="return validateNumber(event)">
+        </div>
+        <div class="input-group">
+            <label for="probability">道具的中獎機率（例如 10 表示 10%）:</label>
+            <input type="text" id="probability" onkeypress="return validateNumber(event)">
+        </div>
         <button onclick="calculate()">計算</button>
-        <p id="result">結果顯示區</p>
+        <div id="result">結果顯示區</div>
     </div>
 
     <script>
+        function validateNumber(event) {
+            const char = String.fromCharCode(event.keyCode);
+            const currentValue = event.target.value;
+            
+            // 允许数字
+            if (/[0-9]/.test(char)) return true;
+            
+            // 允许一个小数点（自动转换为英文小数点）
+            if (['.', '。', '．', '､', '｡'].includes(char)) {
+                if (!currentValue.includes('.')) {
+                    event.target.value += '.';
+                }
+                return false;
+            }
+            
+            // 允许退格和删除键
+            if (event.keyCode === 8 || event.keyCode === 46) return true;
+            
+            return false;
+        }
+
         function calculate() {
-            let cost = parseFloat(document.getElementById("cost").value);
-            let probability = parseFloat(document.getElementById("probability").value) / 100;
+            const cost = parseFloat(document.getElementById('cost').value);
+            const probability = parseFloat(document.getElementById('probability').value) / 100;
+            const resultDiv = document.getElementById('result');
+            const container = document.querySelector('.container');
 
             if (isNaN(cost) || isNaN(probability) || probability <= 0) {
-                document.getElementById("result").textContent = "請輸入正確的數值！";
+                resultDiv.textContent = "請輸入正確的數值！";
                 return;
             }
 
-            let expectedCost = cost / probability;
-            document.getElementById("result").textContent = `平均抽到該道具所需成本：${expectedCost.toFixed(2)} 點`;
-            
-            // 閃爍效果
-            let container = document.querySelector(".container");
-            let flashCount = 2;
-            function flash(count) {
-                if (count > 0) {
-                    container.style.backgroundColor = (count % 2 === 0) ? "yellow" : "white";
-                    setTimeout(() => flash(count - 1), 100);
-                }
-            }
-            flash(flashCount);
+            const expectedCost = cost / probability;
+            resultDiv.textContent = `平均抽到該道具所需成本：${expectedCost.toFixed(2)} 點`;
+
+            // 背景閃爍效果
+            container.style.backgroundColor = 'yellow';
+            setTimeout(() => {
+                container.style.backgroundColor = 'white';
+            }, 200);
         }
     </script>
-
 </body>
 </html>
