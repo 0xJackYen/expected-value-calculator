@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>期望值計算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 2px solid #000;
+            border-radius: 10px;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: darkblue;
+        }
+        #result {
+            font-size: 18px;
+            margin-top: 15px;
+            font-weight: bold;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>期望值計算器</h2>
+        <label>每次抽獎的成本（點數）:</label>
+        <input type="number" id="cost" placeholder="輸入每次抽獎成本">
+        
+        <label>道具的中獎機率（%）:</label>
+        <input type="number" id="probability" placeholder="輸入中獎機率（如 10 代表 10%）">
+        
+        <button onclick="calculate()">計算</button>
+        <p id="result">結果顯示區</p>
+    </div>
+
+    <script>
+        function calculate() {
+            let cost = parseFloat(document.getElementById("cost").value);
+            let probability = parseFloat(document.getElementById("probability").value) / 100;
+
+            if (isNaN(cost) || isNaN(probability) || probability <= 0) {
+                document.getElementById("result").textContent = "請輸入正確的數值！";
+                return;
+            }
+
+            let expectedCost = cost / probability;
+            document.getElementById("result").textContent = `平均抽到該道具所需成本：${expectedCost.toFixed(2)} 點`;
+            
+            // 閃爍效果
+            let container = document.querySelector(".container");
+            let flashCount = 6;
+            function flash(count) {
+                if (count > 0) {
+                    container.style.backgroundColor = (count % 2 === 0) ? "yellow" : "white";
+                    setTimeout(() => flash(count - 1), 100);
+                }
+            }
+            flash(flashCount);
+        }
+    </script>
+
+</body>
+</html>
