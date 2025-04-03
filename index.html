@@ -76,7 +76,7 @@
             
             // 閃爍效果
             let container = document.querySelector(".container");
-            let flashCount = 2;
+            let flashCount = 0;
             function flash(count) {
                 if (count > 0) {
                     container.style.backgroundColor = (count % 2 === 0) ? "yellow" : "white";
